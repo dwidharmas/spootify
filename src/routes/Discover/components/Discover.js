@@ -8,6 +8,9 @@ export default class Discover extends Component {
     super();
 
     this.state = {
+      loadingNewRelease: false,
+      loadingPlaylist: false,
+      loadingCategories: false,
       newReleases: [],
       playlists: [],
       categories: []
@@ -47,6 +50,7 @@ export default class Discover extends Component {
 
   fetchNewRelease = async (token) => {
     try {
+      this.setState({ loadingNewRelease: true})
       const response = await fetch(`${config.api.baseUrl}/browse/new-releases`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -56,9 +60,8 @@ export default class Discover extends Component {
       if (!response.ok) {
         throw new Error('Failed to fetch new releases');
       }
-
       const data = await response.json();
-      this.setState({ newReleases: data.albums.items });
+      this.setState({ newReleases: data.albums.items, loadingNewRelease: false });
     } catch (error) {
       console.error('Error fetching new releases:', error.message);
     }
@@ -66,6 +69,7 @@ export default class Discover extends Component {
 
   fetchPlaylist = async (token) => {
     try {
+      this.setState({ loadingPlaylist: true})
       const response = await fetch(`${config.api.baseUrl}/browse/featured-playlists`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,7 +81,7 @@ export default class Discover extends Component {
       }
 
       const data = await response.json();
-      this.setState({ playlists: data.playlists.items });
+      this.setState({ playlists: data.playlists.items, loadingPlaylist: false });
     } catch (error) {
       console.error('Error fetching new releases:', error.message);
     }
@@ -85,6 +89,7 @@ export default class Discover extends Component {
 
   fetchCategories = async (token) => {
     try {
+      this.setState({ loadingCategories: true})
       const response = await fetch(`${config.api.baseUrl}/browse/categories`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -96,7 +101,7 @@ export default class Discover extends Component {
       }
 
       const data = await response.json();
-      this.setState({ categories: data.categories.items });
+      this.setState({ categories: data.categories.items, loadingCategories: false });
     } catch (error) {
       console.error('Error fetching new releases:', error.message);
     }
@@ -104,13 +109,13 @@ export default class Discover extends Component {
 
 
   render() {
-    const { newReleases, playlists, categories } = this.state;
+    const { newReleases, playlists, categories, loadingNewRelease, loadingPlaylist, loadingCategories } = this.state;
 
     return (
       <div className="discover">
-        <DiscoverBlock text="RELEASED THIS WEEK" id="released" data={newReleases} />
-        <DiscoverBlock text="FEATURED PLAYLISTS" id="featured" data={playlists} />
-        <DiscoverBlock text="BROWSE" id="browse" data={categories} imagesKey="icons" />
+        <DiscoverBlock text="RELEASED THIS WEEK" id="released" data={newReleases} loading={loadingNewRelease} />
+        <DiscoverBlock text="FEATURED PLAYLISTS" id="featured" data={playlists} loading={loadingPlaylist} />
+        <DiscoverBlock text="BROWSE" id="browse" data={categories} loading={loadingCategories}  imagesKey="icons" />
       </div>
     );
   }

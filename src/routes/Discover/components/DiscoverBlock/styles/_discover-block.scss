@@ -66,6 +66,22 @@
       margin-right: 50px;
     }
 
+    >.spinner {
+      margin-left: 50px;
+      font-size: 36px;
+      align-self: center;
+      animation: spin infinite 5s linear;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     @media only screen and (max-height: 750px) {
       margin-bottom: 20px;
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import DiscoverItem from './DiscoverItem';
 import '../styles/_discover-block.scss';
 
@@ -13,7 +13,7 @@ function scrollContainer(id, { isNegative } = {}) {
   };
 }
 
-export default function DiscoverBlock({ text, id, data, imagesKey = 'images' }) {
+export default function DiscoverBlock({ text, id, data, loading, imagesKey = 'images' }) {
   return (
     <div className="discover-block">
       <div className="discover-block__header">
@@ -35,9 +35,12 @@ export default function DiscoverBlock({ text, id, data, imagesKey = 'images' }) 
         }
       </div>
       <div className="discover-block__row" id={id}>
-        {data.map(({ [imagesKey]: images, name }) => (
-          <DiscoverItem key={name} images={images} name={name} />
-        ))}
+        {
+          loading ? <FontAwesomeIcon icon={faSpinner} className="spinner" /> : 
+          data.map(({ [imagesKey]: images, name }) => (
+            <DiscoverItem key={name} images={images} name={name} />
+          ))
+        }
       </div>
     </div>
   );
